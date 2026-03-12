@@ -1,24 +1,33 @@
-import { UserSchema } from '#database/schema'
-import hash from '@adonisjs/core/services/hash'
+import { DateTime } from 'luxon'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { type AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-// IMPORTANTE: Importa el decorador column si vas a definir campos manualmente
-import { column } from '@adonisjs/lucid/orm'
+import hash from '@adonisjs/core/services/hash' // <--- Importar hash
 
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+// Pasamos el servicio hash al mixin para que verifyCredentials funcione
+const AuthFinder = withAuthFinder(hash) 
+
+export default class User extends compose(BaseModel, AuthFinder) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
-  declare currentAccessToken?: AccessToken
 
-  // Definimos explícitamente el rol para que TypeScript no se queje
+  @column({ isPrimary: true })
+  declare id: number
+
+  @column()
+  declare email: string
+
+  @column({ serializeAs: null })
+  declare password: string
+
   @column()
   declare role: 'ADMIN' | 'GERENTE' | 'FINANZAS' | 'USUARIO'
 
-  // El método de las iniciales que ya tenías (puedes dejarlo o quitarlo, no afecta la prueba)
-  get initials() {
-   // Usamos el email ya que no tenemos campo fullName en la base de datos
-    const [first] = this.email.split('@')
-    return `${first.slice(0, 2)}`.toUpperCase()
-  }
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }
+
 

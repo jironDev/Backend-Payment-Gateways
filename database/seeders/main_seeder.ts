@@ -2,7 +2,8 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import Gateway from '#models/gateway'
 import Product from '#models/product'
 import User from '#models/user'
-import hash from '@adonisjs/core/services/hash'
+
+
 
 export default class extends BaseSeeder {
   async run() {
@@ -21,10 +22,11 @@ export default class extends BaseSeeder {
     ])
 
     // 3. Crear Usuario Admin (Para probar roles)
-    await User.create({
-      email: 'admin@test.com',
-      password: await hash.make('password123'), // El modelo se encarga de hashearla
-      role: 'ADMIN',
-    })
+ await User.create({
+  email: 'admin@test.com',
+  password: 'password123', // Pásalo así, el modelo se encarga de encriptarlo
+  // password: await hash.make('password123'),
+  role: 'ADMIN',
+})
   }
 }
