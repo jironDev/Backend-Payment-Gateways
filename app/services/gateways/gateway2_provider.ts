@@ -23,14 +23,26 @@ export default class Gateway2Provider implements PaymentGateway {
       })
 
       const result = await response.json() as any
-      
-      if (!response.ok) throw new Error('Error en Gateway 2')
 
-      return { success: true, externalId: result.id }
-    } catch (error) {
-      return { success: false, error: error.message }
+
+      // ¿Qué responde el mock?
+// console.log('Respuesta Mock Gateway 2:', result)
+      
+      // En Gateway2Provider.ts dentro de charge()
+    if (!response.ok || result.erros) {
+      const message = result.erros ? result.erros[0].message : 'Error en Gateway 2'
+      throw new Error(message)
     }
+
+
+       return { 
+      success: true, 
+      externalId: result.id 
+    }
+  } catch (error) {
+    return { success: false, error: error.message }
   }
+}
 
 public async refund(externalId: string): Promise<PaymentResponse> {
   try {

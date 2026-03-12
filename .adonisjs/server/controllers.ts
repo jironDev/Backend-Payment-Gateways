@@ -8,4 +8,5 @@ export const controllers = {
   NewAccount: () => import('#controllers/new_account_controller'),
   Phones: () => import('#controllers/phones_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Purchases: () => import('#controllers/purchases_controller'),
 }

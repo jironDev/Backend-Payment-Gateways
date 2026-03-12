@@ -1,4 +1,3 @@
-// import router from "@adonisjs/core/services/router";
 
 // const PhonesController = () => import("#controllers/phones_controller")
 
@@ -13,3 +12,8 @@
 
 // router.delete("/phones/:id", [PhonesController, 'destroy'])
 
+
+import router from '@adonisjs/core/services/router'
+const PurchasesController = () => import('#controllers/purchases_controller')
+
+router.post('/purchase', [PurchasesController, 'store'])
