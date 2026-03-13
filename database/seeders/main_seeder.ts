@@ -28,5 +28,12 @@ export default class extends BaseSeeder {
   // password: await hash.make('password123'),
   role: 'ADMIN',
 })
+
+await User.create({
+  email: 'user@test.com',
+  password: 'password123', // Tu modelo lo hashea solo o usa hash.make según lo dejamos
+  role: 'USUARIO',
+})
+
   }
 }
