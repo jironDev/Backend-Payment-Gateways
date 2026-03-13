@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
 
       table.increments('id')
-      table.string('name').notNullable() // Ejemplo: "Gateway 1"
+      table.string('name').notNullable() // Egjemplo: "Gateway 1"
       table.boolean('is_active').defaultTo(true) // Para poder apagar una pasarela
       table.integer('priority').notNullable().defaultTo(1) // 1 es más prioridad 
 

@@ -1,14 +1,14 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 
-// --- 🔓 RUTAS PÚBLICAS ---
+// --- 🔓 PUBLIC ROUTES ---
 router.post('/login', [() => import('#controllers/auth_controller'), 'login'])
 router.post('/purchase', [() => import('#controllers/purchases_controller'), 'store'])
 
-// --- 🔐 RUTAS PRIVADAS (Requieren estar logueado) ---
+// --- 🔐 PRIVATE ROUTES (Require being logged in) ---
 router.group(() => {
 
-  // 🛍️ PRODUCTOS: CRUD con roles específicos
+  // 🛍️ PRODUCTS: CRUD with especific roles
   router.get('/products', [() => import('#controllers/products_controller'), 'index'])
   router.post('/products', [() => import('#controllers/products_controller'), 'store'])
     .use(middleware.role(['ADMIN', 'GERENTE', 'FINANZAS']))
@@ -17,7 +17,7 @@ router.group(() => {
   router.delete('/products/:id', [() => import('#controllers/products_controller'), 'destroy'])
     .use(middleware.role(['ADMIN', 'GERENTE', 'FINANZAS']))
 
-  // 👥 USUARIOS: Solo personal de gestión
+  // 👥 USERS: Just autohrized roles
   router.group(() => {
     router.get('/users', [() => import('#controllers/users_controller'), 'index'])
     router.get('/users/:id', [() => import('#controllers/users_controller'), 'show'])
@@ -26,25 +26,25 @@ router.group(() => {
     router.delete('/users/:id', [() => import('#controllers/users_controller'), 'destroy'])
   }).use(middleware.role(['ADMIN', 'GERENTE']))
 
-  // 💳 GESTIÓN DE PASARELAS (GATEWAYS)
+  // 💳 GATEWAYS
   router.patch('/gateways/:id/priority', [() => import('#controllers/gateways_controller'), 'updatePriority'])
     .use(middleware.role(['ADMIN']))
 
-  // 📊 LISTADOS Y CLIENTES
+    // 📈 CUSTOMERS REPORTS
   router.get('/customers', [() => import('#controllers/customers_controller'), 'index'])
     .use(middleware.role(['ADMIN', 'GERENTE']))
 
     router.get('/customers/:id', [() => import('#controllers/customers_controller'), 'show'])
   .use(middleware.role(['ADMIN', 'GERENTE']))
 
-  // 🧾 TRANSACCIONES    
+  // 🧾 SALES REPORTS    
   router.get('/transactions', [() => import('#controllers/purchases_controller'), 'index'])
     .use(middleware.role(['ADMIN', 'FINANZAS']))
   
  router.get('/transactions/:id', [() => import('#controllers/purchases_controller'), 'show'])
   .use(middleware.role(['ADMIN', 'GERENTE', 'FINANZAS'])) 
 
-  // 💸 REEMBOLSOS
+  // 💸 REFUNDS
   router.post('/transactions/:id/refund', [() => import('#controllers/refunds_controller'), 'store'])
     .use(middleware.role(['ADMIN', 'FINANZAS']))
 

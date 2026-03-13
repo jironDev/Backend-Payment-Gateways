@@ -17,7 +17,7 @@ export default class AccessTokenController {
   }
 
   async destroy({ auth }: HttpContext) {
-    // Aplicamos el cast para que TS reconozca currentAccessToken
+    
     const user = auth.getUserOrFail() as User & { currentAccessToken: any }
     
     if (user && user.currentAccessToken) {

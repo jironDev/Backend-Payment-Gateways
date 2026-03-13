@@ -7,20 +7,21 @@ import TransactionProduct from '#models/transaction_product'
 import db from '@adonisjs/lucid/services/db'
 
 export default class PurchasesController {
-  // Instanciamos el servicio (esto es el "cerebro")
+  
+  // I instance the service
   private paymentService = new PaymentService()
 
   public async store({ request, response }: HttpContext) {
-    // 1. Validar los datos de entrada (VineJS)
-    const payload = await request.validateUsing(purchaseValidator)
 
-    // Iniciamos una TRANSACCIÓN DE BASE DE DATOS (Database Transaction)
-    // Esto asegura que si algo falla al guardar, no se creen datos a medias en MySQL
+    // 1. Check the input data (VineJS)
+       const payload = await request.validateUsing(purchaseValidator)
+
+       // I start a DATABASE TRANSACTION  
     const trx = await db.transaction()
 
     try {
-      // 2. Procesar el pago con el Failover de pasarelas
-      const paymentResult = await this.paymentService.process(
+      // 2. Process the payment with the Failover of gateways
+       const paymentResult = await this.paymentService.process(
         {
           name: payload.name,
           email: payload.email,
@@ -34,26 +35,26 @@ export default class PurchasesController {
         return response.badRequest({ message: paymentResult.error })
       }
 
-      // 3. Persistir en la DB (Solo si el pago fue exitoso)
+      // 3. If payment was successful, we save the purchase in our DB
       
-      // A. Buscar o crear al cliente
+      // A. Look for the customer by email, if not exists, create it. We use the same transaction for consistency
       const customer = await Customer.firstOrCreate(
         { email: payload.email },
         { name: payload.name },
         { client: trx }
       )
 
-      // B. Crear la transacción principal
+      // B. Create the transaction record with the info from the payment result
       const transaction = await Transaction.create({
         customerId: customer.id,
         gatewayId: paymentResult.gatewayId,
         externalId: paymentResult.externalId,
         amount: paymentResult.amount,
         status: 'COMPLETED',
-        lastFourDigits: payload.cardNumber.slice(-4) // Guardamos solo los últimos 4 por seguridad
+        lastFourDigits: payload.cardNumber.slice(-4) // Just the last 4 digits for security
       }, { client: trx })
 
-      // C. Registrar los productos que se compraron
+      // C. Create the records in the pivot table for the products bought
       const productRecords = payload.products.map(p => ({
         transactionId: transaction.id,
         productId: p.id,
@@ -62,7 +63,7 @@ export default class PurchasesController {
       
       await TransactionProduct.createMany(productRecords, { client: trx })
 
-      // Confirmamos los cambios en MySQL
+      // Confirm the transaction in the DB
       await trx.commit()
 
       return response.ok({
@@ -72,7 +73,6 @@ export default class PurchasesController {
       })
 
     } catch (error) {
-      // Si algo sale mal guardando en la DB, deshacemos todo
       await trx.rollback()
       return response.internalServerError({ message: 'Error interno al procesar la compra', error: error.message })
     }
@@ -80,7 +80,7 @@ export default class PurchasesController {
 
 
 public async index({ response }: HttpContext) {
-  // Lista todas las compras con su cliente y el nombre de la pasarela usada
+  // List all transactions with customer and gateway info (for admin view)
   const transactions = await Transaction.query()
     .preload('customer')
     .preload('gateway')
@@ -90,7 +90,7 @@ public async index({ response }: HttpContext) {
 }
 
 public async show({ params, response }: HttpContext) {
-  // Detalle de una compra específica con sus productos
+  // Detail of a specific purchase with its products
   const transaction = await Transaction.query()
     .where('id', params.id)
     .preload('customer')

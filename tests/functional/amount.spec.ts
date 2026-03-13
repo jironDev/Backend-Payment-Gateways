@@ -10,11 +10,11 @@ test.group('Cálculo de Montos', () => {
       email: 'monto@test.com',
       cardNumber: '5569000000006063',
       cvv: '010', 
-      products: [{ id: product.id, qty: 2 }] // Compramos 2
+      products: [{ id: product.id, qty: 2 }] // We bought 2 units, but we don't send the price, the system should calculate it based on the DB price * quantity
     })
 
     response.assertStatus(200)
-    // Verificamos que el monto guardado sea (precio_db * 2)
+    // Verify that the saved amount is (db_price * 2)
     response.assertBodyContains({ amount: product.amount * 2 })
   })
 })

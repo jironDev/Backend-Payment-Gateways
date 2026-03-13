@@ -3,9 +3,10 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import hash from '@adonisjs/core/services/hash' // <--- Importar hash
+import hash from '@adonisjs/core/services/hash' 
 
-// Pasamos el servicio hash al mixin para que verifyCredentials funcione
+// We use the AuthFinder mixin, which requires the hash service to verify passwords. This allows us to use User.verifyCredentials() in our controllers.
+
 const AuthFinder = withAuthFinder(hash) 
 
 export default class User extends compose(BaseModel, AuthFinder) {

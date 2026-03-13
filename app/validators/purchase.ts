@@ -6,8 +6,9 @@ export const purchaseValidator = vine.compile(
     email: vine.string().email(),
     cardNumber: vine.string().minLength(16).maxLength(16),
     cvv: vine.string().minLength(3).maxLength(3),
-    // Validamos que envíen un arreglo de productos
-    products: vine.array(
+
+    // Check that they send an array of products
+      products: vine.array(
       vine.object({
         id: vine.number(),
         qty: vine.number().min(1)

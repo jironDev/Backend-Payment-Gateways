@@ -5,23 +5,23 @@ export default class RoleMiddleware {
   async handle(
     { auth, response }: HttpContext,
     next: NextFn,
-    allowedRoles: string[] // Estos vienen de la definición de la ruta
+    allowedRoles: string[] 
   ) {
-    // 1. Verificamos que el usuario esté autenticado (auth_middleware ya debió correr)
-    const user = auth.user
+    // 1. Check if the user is authenticated (auth_middleware should have already run)
+     const user = auth.user
 
     if (!user) {
       return response.unauthorized({ message: 'No autenticado' })
     }
 
-    // 2. Verificamos si el rol del usuario está en la lista de permitidos
-    if (!allowedRoles.includes(user.role)) {
+    // 2. Check if the user's role is in the allowed list
+       if (!allowedRoles.includes(user.role)) {
       return response.forbidden({ 
         message: 'No tienes permisos suficientes para acceder a este recurso' 
       })
     }
 
-    // 3. Si todo está bien, pasamos al siguiente paso (Controlador)
+    // If we reach this point, the user is authenticated and has the right role
     return next()
   }
 }

@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 🗄️ Base de Datos MySQL
+  # 🗄️ Database MySQL
   db:
     image: mysql:8.0
     container_name: mysql_db
@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # 🔌 Mocks de las Pasarelas (Imagen oficial de la prueba)
+  # 🔌 Gateway's Mocks
   gateways_mock:
     image: matheusprotzen/gateways-mock
     container_name: payment_mocks
@@ -24,7 +24,7 @@ services:
       - "3001:3001"
       - "3002:3002"
 
-  # 🚀 Tu Backend AdonisJS
+  # 🚀 Your AdonisJS Backend
   app:
     build: .
     container_name: adonis_app
@@ -45,10 +45,10 @@ services:
       - DB_USER=root
       - DB_PASSWORD=root
       - DB_DATABASE=multi_gateways
-      # ⚠️ CLAVE: Aquí le decimos a la app que busque los mocks por el nombre del servicio
+      # ⚠️ KEY: Here we tell the app to look for the mocks by the service name
       - GATEWAY_1_URL=http://gateways_mock:3001
       - GATEWAY_2_URL=http://gateways_mock:3002
-    # Este comando asegura que la DB esté lista antes de arrancar
+    # This command make sure DB is ready before start
     command: >
       sh -c "sleep 10 && 
              node build/ace migration:run --force && 

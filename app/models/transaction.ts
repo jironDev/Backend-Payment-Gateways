@@ -33,7 +33,7 @@ export default class Transaction extends BaseModel {
   @belongsTo(() => Gateway)
   declare gateway: BelongsTo<typeof Gateway>
 
-  // Relación con los productos que se compraron
+  // Related to the pivot table that connects transactions and products, to know what was bought in this transaction
   @hasMany(() => TransactionProduct)
   declare transactionProducts: HasMany<typeof TransactionProduct>
 

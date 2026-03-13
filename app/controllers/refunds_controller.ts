@@ -6,7 +6,7 @@ export default class Refunds_Controller {
   private paymentService = new PaymentService()
 
   public async store({ params, response }: HttpContext) {
-    // 1. Buscar la transacción original
+    // 1. Look for the transaction in our DB to get the gateway and external ID
     const transaction = await Transaction.query()
       .where('id', params.id)
       .preload('gateway')
@@ -16,8 +16,8 @@ export default class Refunds_Controller {
       return response.notFound({ message: 'Transacción no encontrada' })
     }
 
-    // 2. Ejecutar reembolso a través del Service
-    // Necesitamos crear este método en tu PaymentService o llamarlo directo
+    // 2. Execute refund through the Service   
+    
     const result = await this.paymentService.refund(
       transaction.gateway.name, 
       transaction.externalId
@@ -27,7 +27,7 @@ export default class Refunds_Controller {
       return response.badRequest({ message: result.error })
     }
 
-    // 3. Actualizar estado en nuestra DB
+    // 3. Update the transaction status in our DB
     transaction.status = 'REFUNDED'
     await transaction.save()
 
