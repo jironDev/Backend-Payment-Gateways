@@ -1,8 +1,9 @@
 import { PaymentGateway, PaymentRequest, PaymentResponse } from './type.ts'
+import env from '#start/env'
 
 export default class Gateway2Provider implements PaymentGateway {
   public name = 'Gateway 2'
-  private baseUrl = 'http://localhost:3002'
+  private baseUrl = env.get('GATEWAY_2_URL')
 
   public async charge(data: PaymentRequest): Promise<PaymentResponse> {
     try {

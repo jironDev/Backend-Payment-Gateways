@@ -1,8 +1,9 @@
 import { PaymentGateway, PaymentRequest, PaymentResponse } from './type.ts'
+import env from '#start/env' 
 
 export default class Gateway1Provider implements PaymentGateway {
   public name = 'Gateway 1'
-  private baseUrl = 'http://localhost:3001'
+  private baseUrl = env.get('GATEWAY_1_URL')
 
   // El mock pide estas credenciales fijas para el login
   private credentials = {
