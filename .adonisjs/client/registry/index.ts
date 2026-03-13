@@ -18,6 +18,96 @@ const routes = {
     tokens: [{"old":"/purchase","type":0,"val":"purchase","end":""}],
     types: placeholder as Registry['purchases.store']['types'],
   },
+  'products.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/products',
+    tokens: [{"old":"/products","type":0,"val":"products","end":""}],
+    types: placeholder as Registry['products.index']['types'],
+  },
+  'products.store': {
+    methods: ["POST"],
+    pattern: '/products',
+    tokens: [{"old":"/products","type":0,"val":"products","end":""}],
+    types: placeholder as Registry['products.store']['types'],
+  },
+  'products.update': {
+    methods: ["PUT"],
+    pattern: '/products/:id',
+    tokens: [{"old":"/products/:id","type":0,"val":"products","end":""},{"old":"/products/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['products.update']['types'],
+  },
+  'products.destroy': {
+    methods: ["DELETE"],
+    pattern: '/products/:id',
+    tokens: [{"old":"/products/:id","type":0,"val":"products","end":""},{"old":"/products/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['products.destroy']['types'],
+  },
+  'users.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/users',
+    tokens: [{"old":"/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['users.index']['types'],
+  },
+  'users.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/users/:id',
+    tokens: [{"old":"/users/:id","type":0,"val":"users","end":""},{"old":"/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['users.show']['types'],
+  },
+  'users.store': {
+    methods: ["POST"],
+    pattern: '/users',
+    tokens: [{"old":"/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['users.store']['types'],
+  },
+  'users.update': {
+    methods: ["PUT"],
+    pattern: '/users/:id',
+    tokens: [{"old":"/users/:id","type":0,"val":"users","end":""},{"old":"/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['users.update']['types'],
+  },
+  'users.destroy': {
+    methods: ["DELETE"],
+    pattern: '/users/:id',
+    tokens: [{"old":"/users/:id","type":0,"val":"users","end":""},{"old":"/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['users.destroy']['types'],
+  },
+  'gateways.update_priority': {
+    methods: ["PATCH"],
+    pattern: '/gateways/:id/priority',
+    tokens: [{"old":"/gateways/:id/priority","type":0,"val":"gateways","end":""},{"old":"/gateways/:id/priority","type":1,"val":"id","end":""},{"old":"/gateways/:id/priority","type":0,"val":"priority","end":""}],
+    types: placeholder as Registry['gateways.update_priority']['types'],
+  },
+  'customers.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/customers',
+    tokens: [{"old":"/customers","type":0,"val":"customers","end":""}],
+    types: placeholder as Registry['customers.index']['types'],
+  },
+  'customers.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/customers/:id',
+    tokens: [{"old":"/customers/:id","type":0,"val":"customers","end":""},{"old":"/customers/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['customers.show']['types'],
+  },
+  'purchases.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/transactions',
+    tokens: [{"old":"/transactions","type":0,"val":"transactions","end":""}],
+    types: placeholder as Registry['purchases.index']['types'],
+  },
+  'purchases.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/transactions/:id',
+    tokens: [{"old":"/transactions/:id","type":0,"val":"transactions","end":""},{"old":"/transactions/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['purchases.show']['types'],
+  },
+  'refunds.store': {
+    methods: ["POST"],
+    pattern: '/transactions/:id/refund',
+    tokens: [{"old":"/transactions/:id/refund","type":0,"val":"transactions","end":""},{"old":"/transactions/:id/refund","type":1,"val":"id","end":""},{"old":"/transactions/:id/refund","type":0,"val":"refund","end":""}],
+    types: placeholder as Registry['refunds.store']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

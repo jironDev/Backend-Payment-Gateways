@@ -69,4 +69,14 @@ export default class PaymentService {
 
     return { success: false, error: `Pago fallido: ${lastError}` }
   }
+
+
+public async refund(gatewayName: string, externalId: string) {
+  const provider = this.providers[gatewayName as keyof typeof this.providers]
+  if (!provider) throw new Error('Gateway no soportado')
+  
+  return await provider.refund(externalId)
+}
+
+
 }

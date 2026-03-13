@@ -7,6 +7,16 @@ export type ScannedRoutes = {
   }
   POST: {
   }
+  GET: {
+  }
+  HEAD: {
+  }
+  PUT: {
+  }
+  DELETE: {
+  }
+  PATCH: {
+  }
 }
 declare module '@adonisjs/core/types/http' {
   export interface RoutesList extends ScannedRoutes {}

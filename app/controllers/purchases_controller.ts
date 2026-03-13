@@ -77,4 +77,28 @@ export default class PurchasesController {
       return response.internalServerError({ message: 'Error interno al procesar la compra', error: error.message })
     }
   }
+
+
+public async index({ response }: HttpContext) {
+  // Lista todas las compras con su cliente y el nombre de la pasarela usada
+  const transactions = await Transaction.query()
+    .preload('customer')
+    .preload('gateway')
+    .orderBy('createdAt', 'desc')
+
+  return response.ok(transactions)
+}
+
+public async show({ params, response }: HttpContext) {
+  // Detalle de una compra específica con sus productos
+  const transaction = await Transaction.query()
+    .where('id', params.id)
+    .preload('customer')
+    .preload('gateway')
+    .preload('transactionProducts', (query) => query.preload('product'))
+    .firstOrFail()
+
+  return response.ok(transaction)
+}
+
 }
